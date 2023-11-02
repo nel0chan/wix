@@ -1,0 +1,14 @@
+// Velo API Reference: https://www.wix.com/velo/reference/api-overview/introduction
+import { authentication } from 'wix-members-frontend';
+import wixLocation from 'wix-location';
+$w.onReady(function () {
+
+		$w('#textSwitch').onClick(()=>
+		{
+			 authentication.logout();
+			 wixLocation.to('https://www.speedyblinds.au/shop');// Write your Javascript code here using the Velo framework API
+
+		})
+
+
+});
