@@ -1,0 +1,63 @@
+import wixLocation from 'wix-location';
+import {markjobaslost} from 'backend/extrabackend';
+
+
+
+$w.onReady(function () {
+
+const deal_id  = wixLocation.query.dealid;
+
+//var deal_id = "14699000006669523";
+
+    if (deal_id != null)
+        {
+            markjobaslost(deal_id)
+            .then((obj) =>
+                {
+                    const itemdata = JSON.parse(obj);     
+                    var items = itemdata.data;
+                    
+                    console.log("ITEMS");
+                    console.log(items[0].code);
+                    var res = items[0].code;
+                    if (res!="Success")
+                    {
+                        $w("#text71").text = 
+                        `We are Unable to process this request.
+                        
+                        Please contact Speedyblinds for further info.`;
+
+                         $w("#text70").text = "Ooops !";
+                          $w("#section1").show();
+                        
+                    }
+                    else
+                    {
+                        $w("#text71").text = 
+                        `We've marked this job as Lost and won't send you any future reminders for this job.
+                        
+                        If you'd like to open this job in the future, please let us know the Job Name and we'll be able to re-open it for you`;
+                        $w("#text70").text = "Job marked as Lost";
+                        $w("#section1").show();
+
+                    }
+                
+                })
+        }
+        else
+        {
+             $w("#text71").text = 
+             `We are Unable to process this request.
+             
+             Please contact Speedyblinds for further info.`;
+             $w("#text70").text = "Ooops !";
+             $w("#section1").show();
+        }
+
+
+});
+
+
+
+
+
