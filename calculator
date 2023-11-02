@@ -1,0 +1,1008 @@
+import wixData from 'wix-data';
+
+$w.onReady(function () {
+
+	$w("#outfabjoin").text = "";
+	$w("#outhooks").text= "";
+	$w("#outfabreq").text= "";
+
+
+	//$w("#ddrunner").resetValidityIndication();
+
+	$w("#txttrackwidth").onCustomValidation((value, reject) => {
+    const number = parseInt(value, 10);
+   
+   	if (value != "")
+	   {
+		console.log("VALUE IUAS NOT NULL");
+		if  ((number >= 1 && number <= 252 ) || (number >= 300 && number <= 12000))
+		{       // Input is valid    
+			$w("#txtvaltrack").hide();
+		}	
+		else
+		{
+			$w("#txtvaltrack").text = "Hooks per piece of fabric: 1 - 252" + "\n" + "Track width: 300 - 12000mm";
+			$w("#txtvaltrack").show();
+			reject("Please enter 1-252 or 300-12000");	
+		}
+	   }
+	else
+	{
+		if ($w("#ddcurtype").value)
+		{
+		$w("#txtvaltrack").text = "Hooks per piece of fabric: 1 - 252" + "\n" + "Track width: 300 - 12000mm";
+		$w("#txtvaltrack").show();
+		reject("Enter Track Width");
+		}
+		else
+		{
+			$w("#txtvaltrack").hide();
+		}
+		
+			
+	}
+    
+	});
+
+	$w("#txtfabwidth").onCustomValidation((value, reject) => {
+    const number = parseInt(value, 10);
+   
+   	if (value != "")
+	   {
+		
+		if  (number >= 138 && number <= 420 )
+		{       
+			$w("#txtvalfabwid").hide();
+		}	
+		else
+		{
+			$w("#txtvalfabwid").text = "Must be in cm";
+			$w("#txtvalfabwid").show();
+			reject("Enter 138 - 420");	
+		}
+	   }
+	else
+	{
+		if ($w("#ddcurtype").value)
+		{
+		$w("#txtvalfabwid").text = "How wide is the fabric";
+		$w("#txtvalfabwid").show();
+		reject("Enter Track Width");
+		}
+		else
+		{
+			$w("#txtvalfabwid").hide();
+		}	
+	}
+	});
+	$w("#txtdrop").onCustomValidation((value, reject) => {
+    const number = parseInt(value, 10);
+   
+   	if (value != "")
+	   {
+		
+		if  (number >= 300 && number <= 6200 )
+		{       
+			$w("#txtvaldrop").hide();
+		}	
+		else
+		{
+			$w("#txtvaldrop").text = "Curtain drop between 300 - 6200mm";
+			$w("#txtvaldrop").show();
+			reject("Enter 300 - 6200");	
+		}
+	   }
+	else
+	{
+		if ($w("#ddcurtype").value)
+		{
+		$w("#txtvaldrop").text = "Enter curtain drop mm";
+		$w("#txtvaldrop").show();
+		reject("Enter Track Width");
+		}
+		else
+		{
+			$w("#txtvaldrop").hide();
+		}	
+	}
+	});
+	$w("#ddrunner").onCustomValidation((value, reject) => {
+		
+		if ($w("#ddcurtype").value != "" && value == "" )
+		{
+			$w("#txtvalrunner").show();
+			reject($w("#txtvalrunner").text);
+			
+		}
+		else
+		{
+			$w("#txtvalrunner").hide();
+		}
+    
+	});
+
+	$w("#ddtable").onCustomValidation((value, reject) => {
+		console.log("line 41 being validated");
+		if ($w("#ddcurtype").value != "" && value == "" && $w("#ddtable").isVisible )
+		{
+			$w("#txtvaltape").show();
+			reject($w("#txtvaltape").text);
+			console.log("line 46 being validated");
+		}
+		else
+		{
+			$w("#txtvaltape").hide();
+		}
+    
+	});
+
+	$w("#ddpleatfullness").onCustomValidation((value, reject) => {
+		
+		if ($w("#ddcurtype").value != "" && value == "" && $w("#ddpleatfullness").isVisible )
+		{
+			$w("#txtvalpencil").show();
+			reject($w("#txtvalpencil").text);
+			
+		}
+		else
+		{
+			$w("#txtvalpencil").hide();
+		}
+    
+	});
+
+	$w("#ddpiece").onCustomValidation((value, reject) => {
+		
+		if ($w("#ddcurtype").value != "" && value == "" && $w("#ddpiece").isVisible )
+		{
+			$w("#txtvalpc").show();
+			reject($w("#txtvalpc").text);
+			
+		}
+		else
+		{
+			$w("#txtvalpc").hide();
+		}
+    
+	});
+
+	
+	
+});
+
+
+export async function populateDropdown2(collectionName,selType)
+{
+	let allitems = []
+	return wixData.query(collectionName)
+	.eq('type', selType)
+	.eq('param', "runner spacing")
+	.ascending('order1')
+	.find()
+	.then((results) => {
+		if (results.totalCount > 0)
+		{
+			let items = results.items;
+			items.forEach((item) => {
+				let oneItem = {
+					label: item.value.toString(),
+					value: item.value.toString()
+				}
+				allitems.push(oneItem);
+				
+			})
+			return allitems;
+		}
+		return null;
+	})
+}
+
+export async function populateDropdown3(collectionName,selType)
+{
+	let allitems = []
+	return wixData.query(collectionName)
+	.eq('type', selType)
+	.eq('param', "tape spacing")
+	.find()
+	.then((results) => {
+		if (results.totalCount > 0)
+		{
+			let items = results.items;
+			items.forEach((item) => {
+				let oneItem = {
+					label: item.value.toString(),
+					value: item.value.toString()
+				}
+				allitems.push(oneItem);
+				
+			})
+			return allitems;
+		}		
+		return null;
+	})
+}
+
+export async function populateDropdown4(collectionName,selType)
+{
+	let allitems = []
+	return wixData.query(collectionName)
+	.eq('type', selType)
+	.eq('param', "pencil pleat fullness")
+	.find()
+	.then((results) => {
+		if (results.totalCount > 0)
+		{
+			let items = results.items;
+			items.forEach((item) => {
+				let oneItem = {
+					label: item.value.toString(),
+					value: item.value.toString()
+				}
+				allitems.push(oneItem);
+				
+			})
+			return allitems;
+		}		
+		return null;
+	})
+}
+
+export async function populatehiddentype(selType)
+{	
+	return wixData.query("curtaintype")
+	.eq('type', selType)	
+	.find()
+	.then((results) => {
+		var hiddendrop = "0";
+		if (results.totalCount > 0)
+		{
+			
+			let items = results.items;
+			items.forEach((item) => 
+			{				
+				hiddendrop = item.drop.toString();
+			})
+			
+			return hiddendrop;
+		}		
+		return "0";
+	})
+}
+
+export async function calculatefabricjoin()
+{
+	
+	const inputValue = $w('#hiddendrop').value;
+	const inputValue2 = $w('#txtdrop').value;
+	const inputValue3 = $w('#txtfabwidth').value;
+
+	var val1 = false;
+	var val2 = false; 
+	var val3 = false;
+	var hiddrop_val = 0;
+	var drop_val = 0;
+	var width_val = 0;
+
+        if (inputValue === '' || Number(inputValue) === 0) {
+            console.log('Input is empty or 0.');			
+        } 
+		else 
+		{            
+            const numericValuehiddrop = Number(inputValue);
+
+            if (!isNaN(numericValuehiddrop)) {
+                
+                console.log('Numeric Value:', numericValuehiddrop);
+				val1 = true;
+				hiddrop_val = numericValuehiddrop;
+            } 
+			else 
+			{
+                console.log('Invalid input: Not a number.');
+            }
+        }
+
+		if (inputValue2 === '' || Number(inputValue2) === 0) {
+            console.log('Input is empty or 0.');			
+        } 
+		else 
+		{            
+            const numericValuedrop = Number(inputValue2);
+
+            if (!isNaN(numericValuedrop)) {
+                
+                console.log('Numeric Value:', numericValuedrop);
+				val2 = true;
+				drop_val = numericValuedrop;
+            } 
+			else 
+			{
+                console.log('Invalid input: Not a number.');
+            }
+        }
+
+		if (inputValue3 === '' || Number(inputValue3) === 0) {
+            console.log('Input is empty or 0.');			
+        } 
+		else 
+		{            
+            const numericValuewidth = Number(inputValue3);
+
+            if (!isNaN(numericValuewidth)) {
+                
+                console.log('Numeric Value:', numericValuewidth);
+				val3 = true;
+				width_val = numericValuewidth;
+            } 
+			else 
+			{
+                console.log('Invalid input: Not a number.');
+            }
+        }
+
+	if (val1 == true && val2 == true && val3 ==true)
+	{
+		if ((hiddrop_val + drop_val) > (width_val * 10))
+		{
+			
+			$w('#outfabjoin').text = "YES";
+		}
+		else
+		{
+			$w('#outfabjoin').text = "";
+		}
+	}
+	else
+	{
+		$w('#outfabjoin').text = "";
+	}
+}
+
+export async function ddcurtype_change(event) {
+const selType = event.target.value;	
+
+	$w('#hiddendrop').value = "";
+	$w('#outfullness').value = "";
+	$w('#outtrack').value = "";
+	$w('#hiddencolwidth').value = "";
+	$w('#hiddenhooks').value = "";
+	$w('#hiddenrowdrop').value = "";
+
+	$w('#outfabreq').text = "";
+	$w('#outhooks').text = "";
+	$w('#outfabjoin').text = "";
+
+	$w('#txtfabwidth').required = true;
+	$w('#txttrackwidth').required = true;
+	$w('#txtdrop').required = true;
+	$w('#ddpiece').required = true;
+	
+
+	const pp2options = await populateDropdown2("params",selType);	
+
+	if (pp2options === null || pp2options.length === 0) 
+	{
+		$w('#ddrunner').options = [];
+		//$w('#ddrunner').disable();
+		$w('#ddrunner').hide();		
+		$w('#ddrunner').required = false;
+	}
+	else
+	{
+		$w('#ddrunner').options = pp2options;	
+		//$w('#ddrunner').enable();	
+		$w('#ddrunner').show();
+		
+		$w('#ddrunner').selectedIndex = null;
+		$w('#ddrunner').required = true;
+	}
+
+	const pp3options = await populateDropdown3("params",selType);	
+
+	if (pp3options === null || pp3options.length === 0) 
+	{
+		$w('#ddtable').options = [];
+		//$w('#ddtable').disable();
+		$w('#ddtable').hide();
+		$w('#ddtable').required = false;
+	}
+	else
+	{
+		$w('#ddtable').options = pp3options;	
+		//$w('#ddtable').enable();
+		$w('#ddtable').show();	
+		$w('#ddtable').selectedIndex = null;
+		$w('#ddtable').required = true;
+	}
+
+	const pp4options = await populateDropdown4("params",selType);	
+
+	if (pp4options === null || pp4options.length === 0) 
+	{
+		$w('#ddpleatfullness').options = [];
+		//$w('#ddpleatfullness').disable();
+		$w('#ddpleatfullness').hide();
+		$w('#ddpleatfullness').required = false;
+	}
+	else
+	{
+		$w('#ddpleatfullness').options = pp4options;	
+		//$w('#ddpleatfullness').enable();	
+		$w('#ddpleatfullness').show();
+		$w('#ddpleatfullness').selectedIndex = null;
+		$w('#ddpleatfullness').required = true;
+	}
+
+
+	 $w('#hiddendrop').value = await populatehiddentype(selType);
+	 await calculatefabricjoin();
+	 await calculatefullness();
+	 await calculatefabrx();
+
+
+
+}
+
+export async function calculatefullness()
+{
+	const ctype = $w('#ddcurtype').value;
+	const ddtapeValue = $w('#ddtable').value;
+	const ddrunnerValue = $w('#ddrunner').value;
+	const ddpleatfullnessValue = $w('#ddpleatfullness').value;
+	
+		if (ctype === '')
+		{			
+			$w('#outfullness').value  = "";
+		}
+		else
+		{
+			if ((ctype === "S-Fold" || ctype === "Wave Fold") && (ddtapeValue !== '' && ddtapeValue !== null ) && (ddrunnerValue !== '' && ddrunnerValue !== null)  )
+			{
+				console.log ("line 287");
+				console.log (ctype);
+				console.log (ddrunnerValue);
+				console.log (ddtapeValue);
+				console.log (ddpleatfullnessValue);
+				
+				var fness = "";
+				return wixData.query("params")
+				.eq('type', ctype)
+				.eq('param', "fullness")	
+				.eq('param1', ddrunnerValue)	
+				.eq('param2', ddtapeValue)	
+				.find()
+				.then((results) => {
+
+					let items = results.items;
+						items.forEach((item) => 
+						{				
+							fness = item.value.toString();
+
+						})
+			
+				$w('#outfullness').value  = fness;	
+				
+				})				
+			}
+			else if (ctype === "Duo Pinch Pleat" || ctype === "Triple Pinch Pleat"  )
+			{
+				var fness = "";
+				return wixData.query("params")
+				.eq('type', ctype)
+				.eq('param', "fullness")	
+				.find()
+				.then((results) => {
+
+					let items = results.items;
+						items.forEach((item) => 
+						{				
+							fness = item.value.toString();
+						})
+			
+				$w('#outfullness').value  = fness;	
+				
+				})				
+			}
+			else if (ctype === "Pencil Pleat" )
+			{
+				if (ddpleatfullnessValue !== "" && ddpleatfullnessValue !== null && ddpleatfullnessValue != "0" )
+				{
+				$w('#outfullness').value  = ddpleatfullnessValue;		
+				}
+				else
+				{
+				$w('#outfullness').value  = "";
+				}
+			}
+			else
+			{
+				$w('#outfullness').value  = "";
+			}
+			
+		}
+		
+	}
+
+export async function calculatetrack()
+{
+	const twidth = $w('#txttrackwidth').value;
+	const ddpieceValue = $w('#ddpiece').value;
+	const ddrunnerValue = $w('#ddrunner').value;
+
+	//validate track
+	
+	var valtrack = false;
+	var track_val = 0;
+
+	if (twidth === '' || Number(twidth) === 0) 
+		{
+            console.log('Input is empty or 0.');			
+        } 
+		else 
+		{            
+            const numericValuetrack = Number(twidth);
+
+            if (!isNaN(numericValuetrack)) {
+                
+                console.log('Numeric Value:', numericValuetrack);
+				valtrack = true;
+				track_val = numericValuetrack;
+            } 
+			else 
+			{
+                console.log('Invalid input: Not a number.');
+            }
+        }
+	
+	//validate piece
+	var valpiece = false;
+	var piece_val = 0;
+	
+	if (ddpieceValue === '' || Number(ddpieceValue) === 0) 
+				{
+					console.log('Input is empty or 0.');			
+				} 
+				else 
+				{            
+					const numericValuepiece = Number(ddpieceValue);
+
+					if (!isNaN(numericValuepiece)) {
+						
+						console.log('Numeric Value:', numericValuepiece);
+						valpiece = true;
+						piece_val = numericValuepiece;
+					} 
+					else 
+					{
+						console.log('Invalid input: Not a number.');
+					}
+				}
+	
+	//validate runner
+	var valrunner = false;
+	var runner_val = 0;
+
+	if (ddrunnerValue === '' || Number(ddrunnerValue) === 0) 
+				{
+					console.log('Input is empty or 0.');			
+				} 
+				else 
+				{            
+					const numericValuerunner= Number(ddrunnerValue);
+
+					if (!isNaN(numericValuerunner)) {
+						
+						console.log('Numeric Value:', numericValuerunner);
+						valrunner = true;
+						runner_val = numericValuerunner;
+					} 
+					else 
+					{
+						console.log('Invalid input: Not a number.');
+					}
+				}
+	
+	if (valtrack == true)
+	{
+		if(track_val >= 300)
+		{
+			$w('#outtrack').value = track_val.toString();
+		}
+		else		
+		{
+			if (valpiece == true && valrunner == true)
+			{
+				if(track_val <= 250)					{
+						
+						let trackwidth = track_val * piece_val * runner_val;
+						$w('#outtrack').value= trackwidth.toString();
+					}
+				else
+					{
+						$w('#outtrack').value= "";
+					}
+			}
+			else
+			{
+				$w('#outtrack').value= "";
+			}
+			
+		}
+		
+	
+	}
+	else
+	{
+		$w('#outtrack').value= "";
+	}
+	console.log (valtrack);
+	console.log (track_val);
+	console.log (valrunner);
+	console.log (runner_val);
+	console.log (valpiece);
+	console.log (piece_val);
+		
+}
+
+export async function calculatehooks()
+{
+	const twidth = $w('#txttrackwidth').value;
+	const ddpieceValue = $w('#ddpiece').value;
+	const ddrunnerValue = $w('#ddrunner').value;
+	const ddcurtype = $w('#ddcurtype').value;
+
+	//validate track
+	
+	var valtrack = false;
+	var track_val = 0;
+
+	if (twidth === '' || Number(twidth) === 0) 
+		{
+            console.log('Input is empty or 0.');			
+        } 
+		else 
+		{            
+            const numericValuetrack = Number(twidth);
+
+            if (!isNaN(numericValuetrack)) {
+                
+                console.log('Numeric Value:', numericValuetrack);
+				valtrack = true;
+				track_val = numericValuetrack;
+            } 
+			else 
+			{
+                console.log('Invalid input: Not a number.');
+            }
+        }
+	
+	//validate piece
+	var valpiece = false;
+	var piece_val = 0;
+	
+	if (ddpieceValue === '' || Number(ddpieceValue) === 0) 
+				{
+					console.log('Input is empty or 0.');			
+				} 
+				else 
+				{            
+					const numericValuepiece = Number(ddpieceValue);
+
+					if (!isNaN(numericValuepiece)) {
+						
+						console.log('Numeric Value:', numericValuepiece);
+						valpiece = true;
+						piece_val = numericValuepiece;
+					} 
+					else 
+					{
+						console.log('Invalid input: Not a number.');
+					}
+				}
+	
+	//validate runner
+	var valrunner = false;
+	var runner_val = 0;
+
+	if (ddrunnerValue === '' || Number(ddrunnerValue) === 0) 
+				{
+					console.log('Input is empty or 0.');			
+				} 
+				else 
+				{            
+					const numericValuerunner= Number(ddrunnerValue);
+
+					if (!isNaN(numericValuerunner)) {
+						
+						console.log('Numeric Value:', numericValuerunner);
+						valrunner = true;
+						runner_val = numericValuerunner;
+					} 
+					else 
+					{
+						console.log('Invalid input: Not a number.');
+					}
+				}
+	
+	if (valtrack == true && valpiece == true && valrunner == true)
+	{
+		if(piece_val > 0 && track_val > 0 && track_val <= 250)
+		{
+			$w('#hiddenhooks').value = track_val.toString();
+		}
+		else
+		{
+			if ( track_val >= 300)
+			{
+				if (ddcurtype == "Wave Fold" || ddcurtype == "S-Fold")	
+				{
+					
+					var calc_hook = 0;
+					calc_hook = Math.round((track_val / piece_val) / runner_val) + 1;
+
+					
+					if (calc_hook % 2 === 0) 
+					{
+						calc_hook = calc_hook + 0; 
+					} 
+					else 
+					{
+					calc_hook = (Math.ceil(calc_hook / 2) * 2)+0; 
+					}
+					
+					$w('#hiddenhooks').value = calc_hook.toString();
+				}
+				else 
+				{
+					
+					var calc_hook = 0;
+					calc_hook = Math.ceil((track_val / piece_val) / runner_val) + 1;
+					$w('#hiddenhooks').value = calc_hook.toString();
+				}
+				
+			}
+			else
+			{
+			$w('#hiddenhooks').value = "";	
+			}
+		}
+
+		if ($w('#hiddenhooks').value !== "" || $w('#hiddenhooks').value !== "0")
+		{
+			var outtext = "";
+			if (piece_val == 1) 
+			{
+        		outtext = $w('#hiddenhooks').value;
+    		} 
+			else if (piece_val > 1) 
+			{
+				const repeatedValue = `${$w('#hiddenhooks').value} + `.repeat(piece_val - 1) + $w('#hiddenhooks').value;
+				outtext = repeatedValue;
+			}
+
+		    $w("#outhooks").text = outtext.toString();
+
+		}
+		
+
+	}
+	else
+	{
+		$w('#hiddenhooks').value = "";
+		$w("#outhooks").text = "";
+	}
+	
+		
+}
+
+
+export async function calculatefabrx()
+{
+	$w("#outfabreq").text = "";
+
+	const ddcurtype = $w('#ddcurtype').value;
+
+	const fabwidth = $w('#txtfabwidth').value;
+	const fabdropmm = $w('#txtdrop').value;
+		
+	const outfullness = $w('#outfullness').value;
+	const outtrack = $w('#outtrack').value;
+	const hiddendrop = $w('#hiddendrop').value;
+
+
+	//validate fabwidth
+	
+	var valfabricwidth = false;
+	var fabricwidth_val = 0;
+
+	if (fabwidth === '' || Number(fabwidth) === 0) 
+		{
+            console.log('Input is empty or 0.');			
+        } 
+		else 
+		{            
+            const numericValuefabwidth = Number(fabwidth);
+
+            if (!isNaN(numericValuefabwidth)) {
+                
+                console.log('Numeric Value:', numericValuefabwidth);
+				valfabricwidth = true;
+				fabricwidth_val = numericValuefabwidth;
+            } 
+			else 
+			{
+                console.log('Invalid input: Not a number.');
+            }
+        }
+	//validate fabdrop
+	
+	var valfabricdrop = false;
+	var fabricdrop_val = 0;
+
+	if (fabdropmm === '' || Number(fabdropmm) === 0) 
+		{
+            console.log('Input is empty or 0.');			
+        } 
+		else 
+		{            
+            const numericValuefabdrop = Number(fabdropmm);
+
+            if (!isNaN(numericValuefabdrop)) {
+                
+                console.log('Numeric Value:', numericValuefabdrop);
+				valfabricdrop = true;
+				fabricdrop_val = numericValuefabdrop;
+            } 
+			else 
+			{
+                console.log('Invalid input: Not a number.');
+            }
+        }	
+
+	if (valfabricdrop == true && valfabricwidth == true && ddcurtype !== "")
+	{
+		console.log ("line 804");
+		var numx = 0;
+		if ($w("#outfabjoin").text == "YES")
+		{
+			if (outtrack !== "" && outfullness !== "" && outfullness !== "" && hiddendrop !== "" && fabricwidth_val != 0 && fabricdrop_val != 0)
+			{
+				console.log ("line 810");				
+				console.log (Number(outfullness));
+				console.log (Number(outtrack));
+				console.log (fabricwidth_val);
+				console.log (fabricdrop_val);
+				console.log (Number(hiddendrop));
+				numx = Math.ceil(Number(outtrack) * Number(outfullness) / fabricwidth_val / 10) * (fabricdrop_val + Number(hiddendrop));
+				numx = (numx / 1000);
+				var roundedNumber = Math.ceil(numx * Math.pow(10, 1)) / Math.pow(10, 1);
+				$w("#outfabreq").text = roundedNumber.toString();
+			}
+			
+		} 
+		else
+		{
+			if (outtrack !== "" && outfullness !== "" )
+			{
+			console.log ("line 822");
+			console.log (Number(outfullness));
+			console.log (Number(outtrack));
+			numx = (Number(outfullness) * Number(outtrack));
+			numx = (numx / 1000);
+			var roundedNumber = Math.ceil(numx * Math.pow(10, 1)) / Math.pow(10, 1);
+			$w("#outfabreq").text = roundedNumber.toString();
+			}
+
+		}			
+	}	
+		
+}
+
+
+
+/**
+*	Adds an event handler that runs when an input element's value
+ is changed.
+	[Read more](https://www.wix.com/corvid/reference/$w.ValueMixin.html#onChange)
+*	 @param {$w.Event} event
+*/
+export async function ddrunner_change(event) {
+	
+
+	const runnerval = event.target.value;	
+
+	if (runnerval == "54")
+	{
+		$w('#hiddenrowdrop').value = "1";
+	}
+	else if (runnerval == "48")
+	{
+		$w('#hiddenrowdrop').value = "2";
+	}
+	else
+	{
+		$w('#hiddenrowdrop').value = "";
+	}
+
+	await calculatefullness();
+	await calculatetrack();
+	await calculatehooks();	
+	await calculatefabrx();
+}
+
+
+export async function ddtable_change(event) {
+	const tapeval = event.target.value;	
+$w('#hiddencolwidth').value = tapeval;
+await calculatefullness();
+await calculatefabrx();
+}
+
+/**
+*	Adds an event handler that runs when an input element's value
+ is changed.
+	[Read more](https://www.wix.com/corvid/reference/$w.ValueMixin.html#onChange)
+*	 @param {$w.Event} event
+*/
+export async function ddpleatfullness_change(event) {
+		await calculatefullness();
+	await calculatefabrx();
+}
+
+
+export async function txtfabwidth_change(event) {
+	await calculatefabricjoin();
+	await calculatefullness();
+	await calculatefabrx();
+}
+
+/**
+*	Adds an event handler that runs when an input element's value
+ is changed.
+	[Read more](https://www.wix.com/corvid/reference/$w.ValueMixin.html#onChange)
+*	 @param {$w.Event} event
+*/
+export async function txttrackwidth_change(event) {
+	/*const input = event.target.value;
+	const number = parseInt(input, 10);
+   	if ((number >= 1 && number <= 252) || (number >= 300 && number <= 12000))
+	   {
+		   	await calculatetrack();
+			await calculatehooks();
+			await calculatefabrx();
+	   }
+	else
+	{
+	}*/
+
+	await calculatetrack();
+			await calculatehooks();
+			await calculatefabrx();
+}
+
+
+/**
+*	Adds an event handler that runs when an input element's value
+ is changed.
+	[Read more](https://www.wix.com/corvid/reference/$w.ValueMixin.html#onChange)
+*	 @param {$w.Event} event
+*/
+export async function txtdrop_change(event) {
+	await calculatefabricjoin();
+	await calculatefullness();
+	await calculatefabrx();
+}
+
+/**
+*	Adds an event handler that runs when an input element's value
+ is changed.
+	[Read more](https://www.wix.com/corvid/reference/$w.ValueMixin.html#onChange)
+*	 @param {$w.Event} event
+*/
+export async function ddpiece_change(event) {
+	await calculatetrack();
+	await calculatehooks();
+	await calculatefabrx();
+}
+
+
