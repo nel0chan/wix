@@ -1,0 +1,39 @@
+import {fetch} from 'wix-fetch'; 
+
+export async function unsubfactorynotif(crm_cont) {
+  
+  const url = 'https://www.zohoapis.com.au/crm/v2/functions/wixoptoutfactorynotification/actions/execute?auth_type=apikey&zapikey=';
+  const key = "000";
+  let fullUrl = url +  key; 
+  
+  console.log("CONTID IS " + crm_cont);
+   
+  fetch(fullUrl, {method: 'post', 
+                        headers: {'content-type': 'application/x-www-form-urlencoded'},
+                        body: JSON.stringify({contid : crm_cont})
+                        
+                })
+    .then(response => console.log(response))   
+    .catch(error => console.log('ERROR')) 
+  
+}
+
+
+export async function markjobaslost(deal_id) {
+               
+  const url = 'https://www.zohoapis.com.au/crm/v2/functions/wixmarkjobaslost/actions/execute?auth_type=apikey&zapikey=';
+  const key = "000";
+  let fullUrl = url +  key; 
+  
+  console.log("DEALID IS " + deal_id);
+   
+  fetch(fullUrl, {method: 'post', 
+                        headers: {'content-type': 'application/x-www-form-urlencoded'},
+                        body: JSON.stringify({dealid : deal_id})
+                        
+                })
+    .then(response => console.log(response))   
+    .catch(error => console.log('ERROR')) 
+  
+}
+
